@@ -145,12 +145,14 @@ CompanyService company = null;
 
 	@Test
 	void testGetSalaryDistribution() {
-		int interval = 2000;
+		int interval = 1500;
 		List<SalaryIntervalDistribution> distribution = company.getSalaryDistribution(interval);
 		SalaryIntervalDistribution[] expectedDistrubution = {
-			new SalaryIntervalDistribution(SALARY1, SALARY1 + interval, 2)	,
-			new SalaryIntervalDistribution(SALARY3, SALARY3 + interval, 2),
-			new SalaryIntervalDistribution(SALARY5, SALARY5 + interval, 1)
+			new SalaryIntervalDistribution(4500, 6000, 1),
+			new SalaryIntervalDistribution(6000, 7500, 2),
+			new SalaryIntervalDistribution(7500, 9000, 1),
+			new SalaryIntervalDistribution(9000, 10500, 1),
+
 		};
 		assertArrayEquals(expectedDistrubution, distribution.toArray(new SalaryIntervalDistribution[0]));
 		
