@@ -64,7 +64,11 @@ CompanyService company = null;
 	@Test
 	void testHireEmployeeException() {
 		Employee newEmployee = empl1;
-		//FIXME
+		// новый способ - мы утверждаем что если будет вызывается метод с сотрудником 1, то будет эксепшон
+		// assertion method call company.hireEmployee (empl1) should throw IllegalStateException
+		assertThrowsExactly(IllegalStateException.class,()->company.hireEmployee(empl1));
+		/*
+		старый способ
 		boolean flException = false;
 		try {
 			company.hireEmployee(newEmployee);
@@ -72,12 +76,17 @@ CompanyService company = null;
 			flException = true;
 		}
 		assertTrue(flException);
+
+		 */
 	}
 
 	@Test
 	void testFireEmployeeNormal() {
+		assertThrowsExactly(IllegalStateException.class, ()-> company.fireEmployee(ID6));
+		/*
 		assertEquals(empl1, company.fireEmployee(ID1));
 		assertEquals(empl1, company.hireEmployee(empl1));
+		 */
 	}
 	@Test
 	void testFireEmployeeException() {
@@ -160,6 +169,7 @@ CompanyService company = null;
 
 	@Test
 	void testUpdateDepartment() {
+		assertThrowsExactly(IllegalStateException.class,()-> company.updateDepartment(ID6, DEPARTMENT1));
 		assertEquals(empl2, company.updateDepartment(ID2, DEPARTMENT2));
 		runListTest(new Employee[] {empl1}, company.getEmployeesByDepartment(DEPARTMENT1));
 		runListTest(new Employee[] {empl2, empl3, empl4}, company.getEmployeesByDepartment(DEPARTMENT2));
@@ -171,6 +181,7 @@ CompanyService company = null;
 		assertEquals(empl2, company.updateSalary(ID2, SALARY3));
 		runListTest(new Employee[] {empl1}, company.getEmployeesBySalary(SALARY1, SALARY3));
 		runListTest(new Employee[] {empl2, empl3, empl4}, company.getEmployeesBySalary(SALARY3, SALARY5));
+		assertThrowsExactly(IllegalStateException.class,()-> company.updateSalary(ID6, SALARY1));
 	}
 
 	@Test

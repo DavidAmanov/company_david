@@ -13,13 +13,13 @@ public class CompanyServiceImpl implements CompanyService {
 	HashMap<Long, Employee> employeesMap = new HashMap<>();
 	/***********************************************************/
 	HashMap<String, Set<Employee>> employeesDepartment = new HashMap<>();
-	//key - department, value- Set of employees working in the department
+	//key - department, value - Set of employees working in the department
 	/*************************************************************/
 	TreeMap<Integer, Set<Employee>> employeesSalary = new TreeMap<>();
 	//key - salary, value - set of employees having the salary value
 	/****************************************************************/
 	TreeMap<LocalDate, Set<Employee>> employeesAge = new TreeMap<>();
-	//key birth date; value set of employees born at the date
+	//key birthdate; value set of employees born at the date
 	/*******************************************************************/
 	@Override
 	/**
@@ -99,21 +99,22 @@ public class CompanyServiceImpl implements CompanyService {
 
 	private void removeEmployeesSalary(Employee empl) {
 		int salary = empl.salary();
-		Set<Employee> set = employeesSalary.get(salary);
-		set.remove(empl);
-		if(set.isEmpty()) {
-			employeesSalary.remove(salary);
-		}
+		removeFromMap(employeesSalary, empl.salary(), empl);
 		
+	}
+	private <T> void removeFromMap(Map<T, Set<Employee>> map, T key, Employee empl){
+		//Полиморфизм(мэп) и параметризация(тип данных)
+		Set<Employee> set = map.get(key);
+		set.remove(empl);
+		if (set.isEmpty())
+		{
+			map.remove(key);
+		}
 	}
 
 	private void removeEmployeesDepartment(Employee empl) {
 		String department = empl.department();
-		Set<Employee> set = employeesDepartment.get(department);
-		set.remove(empl);
-		if(set.isEmpty()) {
-			employeesDepartment.remove(department);
-		}
+		removeFromMap(employeesDepartment, empl.department(), empl);
 		
 	}
 
@@ -146,28 +147,22 @@ public class CompanyServiceImpl implements CompanyService {
 		
 		return new ArrayList<>(employeesMap.values());
 	}
+	private<T> List<Employee> getEmployeesList(T from, T to, TreeMap<T, Set<Employee>> map ){
+		Collection<Set<Employee>> col = map.subMap(from, to).values();
+		return col.stream().flatMap(set->set.stream()).toList();
+
+	}
 
 	@Override
 	public List<Employee> getEmployeesBySalary(int salaryFrom, int salaryTo) {
-		Collection<Set<Employee>> col = employeesSalary.subMap(salaryFrom, salaryTo).values();
-		ArrayList<Employee> res = new ArrayList<>();
-		for(Set<Employee> set: col) {
-			res.addAll(set);
-		}
-		
-		return res;
+		return getEmployeesList(salaryFrom, salaryTo, employeesSalary);
 	}
 
 	@Override
 	public List<Employee> getEmployeeByAge(int ageFrom, int ageTo) {
 		LocalDate dateFrom = getBirthDate(ageTo);
 		LocalDate dateTo = getBirthDate(ageFrom);
-		Collection<Set<Employee>> col = employeesAge.subMap(dateFrom, dateTo).values();
-		ArrayList<Employee> res = new ArrayList<>();
-		for(Set<Employee> set: col) {
-			res.addAll(set);
-		}
-		return res;
+		return getEmployeesList(dateFrom, dateTo, employeesAge);
 	}
 
 	private LocalDate getBirthDate(int age) {
