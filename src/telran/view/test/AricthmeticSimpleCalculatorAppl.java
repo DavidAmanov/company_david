@@ -10,7 +10,7 @@ public class AricthmeticSimpleCalculatorAppl {
         menu.perform(io);
     }
 
-    private static Item[] getItems() {
+    static Item[] getItems() {
         Item[] items = {
                 of("Add numbers", io -> addNumbers(io)), 
                 of("Subtract numbers", io->subtractNUmbers(io)),
