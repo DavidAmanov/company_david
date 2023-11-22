@@ -9,8 +9,6 @@ public class NumbersDatesAppl {
                 Item.exit()},
                 "Numbers-Dates-Operations");
         menu.perform(io);
-
-
     }
 
 }
